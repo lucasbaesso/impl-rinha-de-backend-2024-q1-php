@@ -1,5 +1,5 @@
 version: '3.8'
-name: rinha-de-backend
+name: rinha-de-backend-lbaesso-php
 services:
 
   app1: &app
