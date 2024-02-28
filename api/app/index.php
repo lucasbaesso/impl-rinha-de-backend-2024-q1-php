@@ -51,16 +51,16 @@
         
         $binds = [];
         if($tipo === 'c'){
-            $updateSql = "UPDATE clientes SET saldo = saldo + ? WHERE id = ? RETURNING *";
+            $updateSql = "UPDATE clientes SET saldo = saldo + ? WHERE id = ? RETURNING nome, saldo, limite";
             $binds = [$valor, $id];
         } else {
             //if tipo is 'd' than write an sql query to update the saldo of the cliente subtracting the valor and if the saldo is less than the limite return an error
-            $updateSql = "UPDATE clientes SET saldo = saldo - ? WHERE id = ? AND saldo - ? >= -ABS(limite) RETURNING limite, saldo";
+            $updateSql = "UPDATE clientes SET saldo = saldo - ? WHERE id = ? AND saldo - ? >= -ABS(limite) RETURNING nome, saldo, limite";
             $binds = [$valor, $id, $valor];
         }
         $sql = "WITH updated AS ($updateSql)
-            INSERT INTO transacoes (clienteid, valor, tipo, descricao, ultimolimite, ultimosaldo)
-                SELECT ?, ?, ?, ?, updated.limite, updated.saldo
+            INSERT INTO transacoes (clienteid, valor, tipo, descricao, ultimolimite, ultimosaldo, clientenome)
+                SELECT ?, ?, ?, ?, updated.limite, updated.saldo, updated.nome
                 FROM updated
                 RETURNING ultimolimite, ultimosaldo;";
 
