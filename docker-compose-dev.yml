@@ -1,5 +1,5 @@
 version: '3.8'
-name: rinha-de-backend-lbaesso-php
+name: rinha-de-backend-php
 services:
 
   app1: &app
@@ -22,6 +22,7 @@ services:
       - ./api/php.ini:/usr/local/etc/php/php.ini
       - ./api/php-fpm.conf:/usr/local/etc/php-fpm.conf
       - ./api/www.conf:/usr/local/etc/php-fpm.d/www.conf
+      - ./api/zz-docker.conf:/usr/local/etc/php-fpm.d/zz-docker.conf
     deploy:
       resources:
         limits:
@@ -31,6 +32,12 @@ services:
   app2:
     <<: *app
     container_name: app2
+    volumes:
+      - ./api/app:/var/www/html/public
+      - ./api/php.ini:/usr/local/etc/php/php.ini
+      - ./api/php-fpm.conf:/usr/local/etc/php-fpm.conf
+      - ./api/www2.conf:/usr/local/etc/php-fpm.d/www.conf
+      - ./api/zz-docker2.conf:/usr/local/etc/php-fpm.d/zz-docker.conf
 
   nginx:
     container_name: nginx-proxy
